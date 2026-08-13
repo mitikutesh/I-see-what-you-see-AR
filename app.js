@@ -5,6 +5,7 @@ let stream=null,facing='environment',lastImage=null,lastResult=null;
 
 function show(el){el.classList.add('active')}
 function hide(el){el.classList.remove('active')}
+function setResultVisible(visible){camera.classList.toggle('result-visible',visible)}
 function toastMsg(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>toast.classList.remove('show'),2600)}
 
 function closeAskPanel(){askPanel.classList.remove('open');askPanel.setAttribute('aria-hidden','true')}
@@ -19,12 +20,12 @@ async function startCamera(){
     video.srcObject=stream;
     await video.play();
     hide(home);show(camera);
-    resultCard.classList.add('hidden');
+    resultCard.classList.add('hidden');setResultVisible(false);
     statusEl.textContent='Point at an object, then tap ANALYZE.';
     $('#captureBtn').disabled=false;
   }catch(e){console.error(e);toastMsg(e.name==='NotAllowedError'?'Camera permission was denied.':'Could not start the camera.')}
 }
-function stopCamera(){if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;video.srcObject=null;hide(camera);show(home);resultCard.classList.add('hidden');closeAskPanel()}
+function stopCamera(){if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;video.srcObject=null;hide(camera);show(home);resultCard.classList.add('hidden');setResultVisible(false);closeAskPanel()}
 function captureVideo(){
   if(!video.videoWidth){toastMsg('Camera is not ready yet.');return null}
   const max=1280,scale=Math.min(1,max/video.videoWidth);
@@ -55,6 +56,7 @@ function renderResult(data){
   $('#confidence').textContent=data.confidence?`${data.confidence} CONFIDENCE`:'AI VISION';
   const facts=$('#resultFacts');facts.innerHTML='';(data.facts||[]).slice(0,5).forEach(f=>{const s=document.createElement('span');s.textContent=f;facts.appendChild(s)});
   resultCard.classList.remove('hidden');
+  setResultVisible(true);
 }
 async function askQuestion(){
   const q=$('#questionInput').value.trim();if(!q||!lastImage)return;
@@ -70,7 +72,7 @@ $('#captureBtn').addEventListener('click',analyzeCurrentView);
 $('#analyzeTextBtn').addEventListener('click',analyzeCurrentView);
 $('#galleryBtn').addEventListener('click',()=>$('#fileInput').click());
 $('#fileInput').addEventListener('change',e=>{const file=e.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=()=>analyze(reader.result);reader.readAsDataURL(file)});
-$('#dismissResult').addEventListener('click',()=>resultCard.classList.add('hidden'));
+$('#dismissResult').addEventListener('click',()=>{resultCard.classList.add('hidden');setResultVisible(false);statusEl.textContent='Point at an object, then tap ANALYZE.'});
 $('#askBtn').addEventListener('click',()=>{$('#askContext').textContent=lastResult?`Ask anything about ${lastResult.title||'what I see'}.`:'Ask a question about the object.';openAskPanel();$('#questionInput').focus()});
 $('#closeAsk').addEventListener('click',closeAskPanel);
 $('#sendQuestion').addEventListener('click',askQuestion);
