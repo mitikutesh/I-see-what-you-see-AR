@@ -30,7 +30,8 @@
       </header>
 
       <div class="reticle" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-      <div id="status" class="status">Point your camera at something interesting.</div>
+      <div id="status" class="status">Point at an object, then tap ANALYZE.</div>
+      <div class="capture-tip">Point at something • tap the white button • AI analyzes the image</div>
 
       <div id="resultCard" class="result-card hidden">
         <div class="result-top"><span id="confidence" class="pill">AI VISION</span><button id="dismissResult" class="mini-close">×</button></div>
@@ -43,7 +44,10 @@
 
       <div class="camera-controls">
         <button id="galleryBtn" class="control-btn">▣<small>Gallery</small></button>
-        <button id="captureBtn" class="shutter" aria-label="Analyze what I see"><span></span></button>
+        <div class="shutter-wrap">
+          <button id="captureBtn" class="shutter" aria-label="Analyze what I see"><span></span></button>
+          <strong>ANALYZE</strong>
+        </div>
         <button id="shareBtn" class="control-btn">↗<small>Share</small></button>
         <input id="fileInput" type="file" accept="image/*" capture="environment" hidden>
       </div>
