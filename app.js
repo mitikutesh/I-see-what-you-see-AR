@@ -8,13 +8,14 @@ function toastMsg(msg){toast.textContent=msg;toast.classList.add('show');clearTi
 
 async function startCamera(){
   if(!navigator.mediaDevices?.getUserMedia){toastMsg('Camera is not supported in this browser.');return}
+  $('#askPanel').classList.remove('open');
   try{
     if(stream) stream.getTracks().forEach(t=>t.stop());
     stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing},width:{ideal:1280},height:{ideal:720}},audio:false});
-    video.srcObject=stream;await video.play();hide(home);show(camera);statusEl.textContent='Point your camera at something interesting.';
+    video.srcObject=stream;await video.play();hide(home);show(camera);resultCard.classList.add('hidden');statusEl.textContent='Point at an object, then tap ANALYZE.';
   }catch(e){console.error(e);toastMsg(e.name==='NotAllowedError'?'Camera permission was denied.':'Could not start the camera.');}
 }
-function stopCamera(){if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;video.srcObject=null;hide(camera);show(home);resultCard.classList.add('hidden')}
+function stopCamera(){if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;video.srcObject=null;hide(camera);show(home);resultCard.classList.add('hidden');$('#askPanel').classList.remove('open')}
 function captureVideo(){
   if(!video.videoWidth){toastMsg('Camera is not ready yet.');return null}
   const max=1280,scale=Math.min(1,max/video.videoWidth);canvas.width=Math.round(video.videoWidth*scale);canvas.height=Math.round(video.videoHeight*scale);
@@ -26,13 +27,12 @@ async function analyze(image){
   try{
     const res=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image})});
     if(!res.ok) throw new Error(await res.text());
-    const data=await res.json();renderResult(data);statusEl.textContent='Object recognized. Explore the AR card.';
+    const data=await res.json();renderResult(data);statusEl.textContent='AI result ready. Tap Ask about this for questions.';
   }catch(e){
     console.error(e);
-    // Demo fallback keeps the camera experience useful before a server key is configured.
-    renderResult({title:'Something in view',description:'Connect the AI endpoint to identify objects in real time. The camera and AR overlay are working.',icon:'✦',confidence:'DEMO',facts:['AI Vision ready','Camera connected']});
-    statusEl.textContent='AI endpoint is not configured yet.';
-    toastMsg('AI endpoint unavailable — showing demo result.');
+    renderResult({title:'Something in view',description:'The camera captured your image, but the AI endpoint did not return a result.',icon:'✦',confidence:'ERROR',facts:['Image captured','Check Vercel logs','Check OPENAI_API_KEY']});
+    statusEl.textContent='Image captured, but AI analysis failed.';
+    toastMsg('AI analysis failed — check the Vercel function logs.');
   }finally{$('#captureBtn').disabled=false}
 }
 function renderResult(data){
@@ -43,7 +43,7 @@ async function askQuestion(){
   const q=$('#questionInput').value.trim();if(!q||!lastImage){return}
   const answer=$('#answer');answer.classList.remove('hidden');answer.textContent='Thinking…';
   try{const res=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:lastImage,question:q,context:lastResult})});if(!res.ok)throw new Error(await res.text());const d=await res.json();answer.textContent=d.answer||d.description||'I could not answer that.'}
-  catch(e){answer.textContent='The AI question service is not configured yet. Add OPENAI_API_KEY to the server environment and try again.'}
+  catch(e){answer.textContent='The AI question service failed. Check the Vercel function logs and OPENAI_API_KEY.'}
 }
 
 $('#startBtn').addEventListener('click',startCamera);$('#closeBtn').addEventListener('click',stopCamera);
