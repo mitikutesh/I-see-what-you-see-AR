@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#07111f">
   <meta name="description" content="AI-powered WebAR vision experience — point your camera at something and learn about it.">
   <title>I See What You See AR</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
   <main class="app">
@@ -31,7 +31,7 @@
 
       <div class="reticle" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
       <div id="status" class="status">Point at an object, then tap ANALYZE.</div>
-      <div class="capture-tip">Point at something • tap the white button • AI analyzes the image</div>
+      <div class="capture-tip">Point at something • tap ANALYZE • AI describes it</div>
 
       <div id="resultCard" class="result-card hidden">
         <div class="result-top"><span id="confidence" class="pill">AI VISION</span><button id="dismissResult" class="mini-close">×</button></div>
@@ -42,7 +42,7 @@
         <button id="askBtn" class="secondary">Ask about this <span>↗</span></button>
       </div>
 
-      <div class="camera-controls">
+      <div id="cameraControls" class="camera-controls">
         <button id="galleryBtn" class="control-btn">▣<small>Gallery</small></button>
         <div class="shutter-wrap">
           <button id="captureBtn" class="shutter" aria-label="Analyze what I see"><span></span></button>
@@ -51,9 +51,10 @@
         <button id="shareBtn" class="control-btn">↗<small>Share</small></button>
         <input id="fileInput" type="file" accept="image/*" capture="environment" hidden>
       </div>
+      <button id="analyzeTextBtn" class="analyze-text-btn" type="button">✦ ANALYZE WHAT I SEE</button>
     </section>
 
-    <section id="askPanel" class="sheet">
+    <section id="askPanel" class="sheet" aria-hidden="true">
       <div class="sheet-inner">
         <div class="sheet-handle"></div>
         <h2>Ask about what I see</h2>
@@ -70,6 +71,6 @@
     <div id="toast" class="toast"></div>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js" defer></script>
-  <script src="app.js" defer></script>
+  <script src="app.js?v=4" defer></script>
 </body>
 </html>
