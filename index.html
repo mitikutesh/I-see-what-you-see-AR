@@ -6,7 +6,68 @@
   <meta name="theme-color" content="#07111f">
   <meta name="description" content="AI-powered WebAR vision experience — point your camera at something and learn about it.">
   <title>I See What You See AR</title>
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
+  <style>
+    /* Emergency mobile camera controls: keep these visible even if a browser has odd CSS handling. */
+    #camera.camera-screen.active .camera-header,
+    #camera.camera-screen.active .camera-controls,
+    #camera.camera-screen.active .analyze-text-btn {
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    #camera.camera-screen.active .camera-header {
+      position: fixed !important;
+      top: max(12px, env(safe-area-inset-top)) !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 100 !important;
+      pointer-events: auto !important;
+    }
+    #camera.camera-screen.active .camera-controls {
+      position: fixed !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: max(18px, env(safe-area-inset-bottom)) !important;
+      z-index: 101 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 28px !important;
+      pointer-events: auto !important;
+    }
+    #camera.camera-screen.active .shutter {
+      display: block !important;
+      width: 82px !important;
+      height: 82px !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    #camera.camera-screen.active .control-btn {
+      display: flex !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    #camera.camera-screen.active .analyze-text-btn {
+      display: block !important;
+      position: fixed !important;
+      left: 50% !important;
+      bottom: max(122px, calc(100px + env(safe-area-inset-bottom))) !important;
+      transform: translateX(-50%) !important;
+      z-index: 102 !important;
+      padding: 14px 22px !important;
+      border: 0 !important;
+      border-radius: 999px !important;
+      background: #2f7df6 !important;
+      color: white !important;
+      font: 800 14px system-ui,sans-serif !important;
+      white-space: nowrap !important;
+      box-shadow: 0 8px 30px rgba(0,0,0,.55) !important;
+      pointer-events: auto !important;
+    }
+    #camera.camera-screen.active .status {
+      z-index: 99 !important;
+    }
+  </style>
 </head>
 <body>
   <main class="app">
@@ -28,11 +89,9 @@
         <div class="camera-title">AI VISION <span>● LIVE</span></div>
         <button id="switchBtn" class="icon-btn" aria-label="Switch camera">↻</button>
       </header>
-
       <div class="reticle" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
       <div id="status" class="status">Point at an object, then tap ANALYZE.</div>
       <div class="capture-tip">Point at something • tap ANALYZE • AI describes it</div>
-
       <div id="resultCard" class="result-card hidden">
         <div class="result-top"><span id="confidence" class="pill">AI VISION</span><button id="dismissResult" class="mini-close">×</button></div>
         <div class="result-icon" id="resultIcon">✦</div>
@@ -41,7 +100,6 @@
         <div id="resultFacts" class="facts"></div>
         <button id="askBtn" class="secondary">Ask about this <span>↗</span></button>
       </div>
-
       <div id="cameraControls" class="camera-controls">
         <button id="galleryBtn" class="control-btn">▣<small>Gallery</small></button>
         <div class="shutter-wrap">
@@ -67,10 +125,9 @@
         <button id="closeAsk" class="text-btn">Close</button>
       </div>
     </section>
-
     <div id="toast" class="toast"></div>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js" defer></script>
-  <script src="app.js?v=4" defer></script>
+  <script src="app.js?v=5" defer></script>
 </body>
 </html>
