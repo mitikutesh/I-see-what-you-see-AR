@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="AI-powered WebAR vision experience — point your camera at something and learn about it.">
+  <title>I See What You See AR</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <section id="home" class="screen active">
+      <div class="hero-glow"></div>
+      <div class="brand"><span class="brand-mark">◉</span><span>I SEE WHAT YOU SEE</span></div>
+      <h1>Point.<br><span>See. Understand.</span></h1>
+      <p class="lead">Use your camera and AI to identify what you see, then explore an interactive AR-style information card.</p>
+      <button id="startBtn" class="primary">Start Camera <span>→</span></button>
+      <div class="hint">Works in modern mobile browsers. Camera permission is required.</div>
+    </section>
+
+    <section id="camera" class="screen camera-screen">
+      <video id="video" autoplay muted playsinline></video>
+      <canvas id="captureCanvas" hidden></canvas>
+      <div class="camera-shade"></div>
+      <header class="camera-header">
+        <button id="closeBtn" class="icon-btn" aria-label="Close">×</button>
+        <div class="camera-title">AI VISION <span>● LIVE</span></div>
+        <button id="switchBtn" class="icon-btn" aria-label="Switch camera">↻</button>
+      </header>
+
+      <div class="reticle" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div id="status" class="status">Point your camera at something interesting.</div>
+
+      <div id="resultCard" class="result-card hidden">
+        <div class="result-top"><span id="confidence" class="pill">AI VISION</span><button id="dismissResult" class="mini-close">×</button></div>
+        <div class="result-icon" id="resultIcon">✦</div>
+        <h2 id="resultTitle">I see…</h2>
+        <p id="resultDescription"></p>
+        <div id="resultFacts" class="facts"></div>
+        <button id="askBtn" class="secondary">Ask about this <span>↗</span></button>
+      </div>
+
+      <div class="camera-controls">
+        <button id="galleryBtn" class="control-btn">▣<small>Gallery</small></button>
+        <button id="captureBtn" class="shutter" aria-label="Analyze what I see"><span></span></button>
+        <button id="shareBtn" class="control-btn">↗<small>Share</small></button>
+        <input id="fileInput" type="file" accept="image/*" capture="environment" hidden>
+      </div>
+    </section>
+
+    <section id="askPanel" class="sheet">
+      <div class="sheet-inner">
+        <div class="sheet-handle"></div>
+        <h2>Ask about what I see</h2>
+        <p id="askContext">Ask a question about the object.</p>
+        <div class="question-row">
+          <input id="questionInput" placeholder="What is this used for?" autocomplete="off">
+          <button id="sendQuestion" class="primary small">Ask</button>
+        </div>
+        <div id="answer" class="answer hidden"></div>
+        <button id="closeAsk" class="text-btn">Close</button>
+      </div>
+    </section>
+
+    <div id="toast" class="toast"></div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
